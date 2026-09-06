@@ -487,8 +487,8 @@ DlgAbout::DlgAbout()
                                    "General Public License, version 2 or later. "
                                    "The full license text is in the License tab."
                                    "<br><br>"
-                                   "TangoQ fork changes Copyright &copy; 2026 "
-                                   "Seemanta Dutta (TangoQ). Mixxx is Copyright "
+                                   "TangoQ modifications Copyright &copy; 2026 "
+                                   "Seemanta Dutta. Mixxx is Copyright "
                                    "&copy; 2001&ndash;2026 the Mixxx Development "
                                    "Team.")
                                         .arg(MIXXX_WEBSITE_URL, MIXXX_DONATE_URL))
