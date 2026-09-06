@@ -2327,7 +2327,8 @@ bool AutoDJProcessor::maybeHandleCortinaFade(
     // Publish the whole cortina envelope (ramp up, hold, ramp down) so the
     // waveform overlay shows one continuous shape for the entire audible cortina,
     // not a separate blip per fade edge. Kept up during the silent lead-in too so
-    // it stays continuous with the load-time preview; cleared once spent.
+    // it stays continuous with the load-time preview, and retained through the
+    // after-gap crossfade by startCortinaAfterGap().
     if (duration > 0.0 && elapsed < cl) {
         thisDeck->publishTangoFade(
                 envelopeStart / duration,
@@ -2394,7 +2395,12 @@ void AutoDJProcessor::startCortinaAfterGap(DeckAttributes* pCortinaDeck) {
     // silent, so the deck is safe if the DJ takes over or the track is reloaded.
     pCortinaDeck->stop();
     setAutoDJFadeGain(pCortinaDeck, 1.0);
-    pCortinaDeck->clearTangoFade();
+    // Keep the cortina's fade envelope on the waveform through the after-gap
+    // crossfade. The cortina is spent but still loaded on this deck, so re-publish
+    // its preview envelope rather than clearing it. It clears when the gap
+    // completes and the handoff finishes (cancelCortinaFade), which is when the
+    // crossfader has settled on the next deck.
+    publishCortinaFadePreview(pCortinaDeck);
     const int gapMs = gapSeconds * 1000;
     if (m_transitionMode == TransitionMode::TandaTransition) {
         startTandaCrossfaderAnimation(pCortinaDeck, getOtherDeck(pCortinaDeck), gapMs);
