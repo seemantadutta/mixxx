@@ -2058,6 +2058,13 @@ void AutoDJProcessor::publishCortinaFadePreview(DeckAttributes* pDeck) {
     if (!pDeck) {
         return;
     }
+    // A playing cortina's envelope is owned by the live handler
+    // (maybeHandleCortinaFade), which redraws it every frame from the actual play
+    // position. Don't touch a playing deck here, so the preview never briefly
+    // overwrites the live envelope during a length nudge.
+    if (pDeck->isPlaying()) {
+        return;
+    }
     // Only cortinas get a fade envelope, and only when Cortina Fade is on.
     if (!m_cortinaFadeEnabled || !isCortina(pDeck->getLoadedTrack())) {
         pDeck->clearTangoFade();
@@ -2820,6 +2827,11 @@ void AutoDJProcessor::controlCortinaLength(double value) {
         m_keepQueueCortinaSeconds = seconds;
         // The budget feeds the cached set-length sums, so force a recompute.
         m_keepQueueDurationDirty = true;
+        // The length sets the envelope's plateau-end and end knees, so a live
+        // nudge must redraw the envelope of any loaded-but-not-playing cortina.
+        // A playing cortina is already redrawn every frame by
+        // maybeHandleCortinaFade(), which publishCortinaFadePreview() leaves alone.
+        refreshCortinaFadePreviews();
     }
 }
 
