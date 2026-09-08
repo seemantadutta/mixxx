@@ -39,6 +39,7 @@ WOverview::WOverview(
         QWidget* parent)
         : WWidget(parent),
           m_group(group),
+          m_bIsPreviewDeck(PlayerManager::isPreviewDeckGroup(group)),
           m_pConfig(pConfig),
           m_type(Type::RGB),
           m_actualCompletion(0),
@@ -536,7 +537,8 @@ void WOverview::mouseMoveEvent(QMouseEvent* e) {
 void WOverview::mouseReleaseEvent(QMouseEvent* e) {
     // LIVE mode is a performance lock: never commit an overview seek while it
     // is active, including a drag that was started just before LIVE was enabled.
-    if (e->button() == Qt::LeftButton && m_pLiveModeControl->toBool()) {
+    // The preview deck is exempt so a track can still be scrubbed there.
+    if (e->button() == Qt::LeftButton && m_pLiveModeControl->toBool() && !m_bIsPreviewDeck) {
         m_bLeftClickDragging = false;
         m_bTimeRulerActive = false;
         unsetCursor();
@@ -579,7 +581,7 @@ void WOverview::mouseReleaseEvent(QMouseEvent* e) {
 void WOverview::mousePressEvent(QMouseEvent* e) {
     //qDebug() << "WOverview::mousePressEvent" << e->pos();
     mouseMoveEvent(e);
-    if (e->button() == Qt::LeftButton && m_pLiveModeControl->toBool()) {
+    if (e->button() == Qt::LeftButton && m_pLiveModeControl->toBool() && !m_bIsPreviewDeck) {
         m_bLeftClickDragging = false;
         m_bTimeRulerActive = false;
         unsetCursor();

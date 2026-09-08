@@ -148,6 +148,9 @@ class WOverview : public WWidget, public TrackDropTarget {
     // Hold the last visual sample processed to generate the pixmap
 
     const QString m_group;
+    // The preview deck is exempt from the LIVE-mode seek lock: a DJ still needs
+    // to scrub a track there while a performance is locked down.
+    const bool m_bIsPreviewDeck;
     UserSettingsPointer m_pConfig;
 
     Type m_type;

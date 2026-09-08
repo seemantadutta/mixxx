@@ -4,6 +4,7 @@
 #include <QEvent>
 
 #include "control/controlproxy.h"
+#include "mixer/playermanager.h"
 #include "moc_wwaveformviewer.cpp"
 #include "util/dnd.h"
 #include "util/math.h"
@@ -18,6 +19,7 @@ WWaveformViewer::WWaveformViewer(
         QWidget* parent)
         : WWidget(parent),
           m_group(group),
+          m_bIsPreviewDeck(PlayerManager::isPreviewDeckGroup(group)),
           m_pConfig(pConfig),
           m_zoomZoneWidth(20),
           m_bScratching(false),
@@ -83,7 +85,7 @@ void WWaveformViewer::mousePressEvent(QMouseEvent* event) {
         return;
     }
 
-    if (event->button() == Qt::LeftButton && isLiveModeEnabled()) {
+    if (event->button() == Qt::LeftButton && isLiveModeEnabled() && !m_bIsPreviewDeck) {
         return;
     }
 
@@ -138,7 +140,7 @@ void WWaveformViewer::mouseMoveEvent(QMouseEvent* event) {
         return;
     }
 
-    if (m_bScratching && isLiveModeEnabled()) {
+    if (m_bScratching && isLiveModeEnabled() && !m_bIsPreviewDeck) {
         m_pScratchPositionEnable->set(0.0);
         m_bScratching = false;
         setCursor(Qt::ArrowCursor);
