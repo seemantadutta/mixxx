@@ -65,6 +65,9 @@ class WWaveformViewer : public WWidget, public TrackDropTarget {
 
   private:
     const QString m_group;
+    // The preview deck is exempt from the LIVE-mode seek lock: a DJ still needs
+    // to scrub a track there while a performance is locked down.
+    const bool m_bIsPreviewDeck;
     UserSettingsPointer m_pConfig;
     int m_zoomZoneWidth;
     ControlProxy* m_pZoom;
