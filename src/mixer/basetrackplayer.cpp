@@ -381,6 +381,15 @@ void BaseTrackPlayerImpl::slotEjectTrack(double v) {
         return;
     }
 
+    // LIVE mode is a performance lock: block eject - and the un-eject/reload
+    // conveniences below - so an accidental click cannot pull a loaded track
+    // out from under a running set. Like the playing-track guard above, the
+    // button still animates because the control toggles, but nothing happens.
+    if (ControlObject::get(ConfigKey(QStringLiteral("[AutoDJ]"),
+                QStringLiteral("live_mode"))) > 0.0) {
+        return;
+    }
+
     mixxx::Duration elapsed = m_ejectTimer.restart();
 
     // Double-click always restores the last replaced track, i.e. un-eject the second
