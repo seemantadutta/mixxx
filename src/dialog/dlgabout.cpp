@@ -22,7 +22,12 @@ DlgAbout::DlgAbout()
 #ifdef Q_OS_MACOS
     mixxx_logo->load(QString(TANGOQ_TOOLBAR_LOGO_MACOS_PATH));
 #else
-    mixxx_logo->load(QString(TANGOQ_TOOLBAR_LOGO_PATH));
+    // The wordmark's "Tango" is near-white for the dark toolbar and vanishes on a
+    // light-themed dialog, so pick the dark-wordmark variant when the dialog
+    // background is light. Mirrors the heart-icon choice below.
+    const bool darkBg = Color::isDimColor(palette().window().color());
+    const QString logo = darkBg ? TANGOQ_TOOLBAR_LOGO_PATH : TANGOQ_TOOLBAR_LOGO_DARK_PATH;
+    mixxx_logo->load(logo);
 #endif
 
     // Let the wordmark act as a link to the project's own site, the way an About
