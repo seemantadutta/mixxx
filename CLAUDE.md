@@ -58,8 +58,9 @@ cmake --build . --config RelWithDebInfo -- -j 2      # the app
   `--from-ref`/`--to-ref`, **never** `--all-files`). CI's "Detecting code style
   issues" job lints the PR's changed files with clang-format, codespell and
   markdownlint, so an unformatted push fails there even when the build is green.
-- Doc-only commits get `[skip ci]` — a docs push once cancelled an in-flight
-  MSI build.
+- Doc-only commits get `[skip ci]` in the commit message. Use that exact spelling;
+  `[skip_ci]` is not a recognized GitHub Actions skip instruction. A docs push
+  once cancelled an in-flight MSI build.
 
 ## Repo and branches
 
@@ -76,7 +77,7 @@ cmake --build . --config RelWithDebInfo -- -j 2      # the app
   upstream**. Never merge feature work into them.
 - Commit or push only when asked.
 
-Releases are GitHub Releases on `main` tagged like `tango-2.5.6-v1`, with
+Releases are GitHub Releases on `main` tagged like `1.0.2`, with
 unsigned installers attached and `RELEASE_NOTES.md` as the body. Download links
 for users must point at **release assets** (permanent), never Actions artifacts
 (they expire and need a login).
@@ -101,10 +102,10 @@ dialogs and painting are manual-only.
 minutes by a test or by instrumenting, after hours of reading. Write the failing
 test first, and trace a value to its *use*, not its assignment.
 
-The feature set was frozen for a first release on **2026-07-26** and the project
-is in a hardening phase. Default to deferring a new feature idea and capturing
-it in `ROADMAP.md`/`prerelease-tasks.md` rather than building it, unless the user
-says otherwise.
+The feature set was frozen for the 1.0.2 early-access soft start on
+**2026-07-26**, and the project is in a hardening phase. Default to deferring a
+new feature idea and capturing it in `ROADMAP.md` rather than building it,
+unless the user says otherwise.
 
 ## Domain context
 
@@ -151,13 +152,13 @@ behaviour; `[AutoDJ],keep_queue_off` is its inverse, which exists because a skin
 
 ## Where things are written down
 
-- `prerelease-tasks.md` — the live task list and design decisions, including the
-  Tanda transition spec.
 - `ROADMAP.md` — the fork's roadmap: completed work, planned features, known
   issues, and long-term ideas.
 - `RELEASE_NOTES.md`, `INSTALL.md` — user-facing, for non-technical DJs.
-- `ghostdeck-phase1-plan.md` and `tanda-insights.md` are untracked scratch files
-  and unrelated to the current work — leave them alone.
+- `docs/release-1.0.2-checklist.md` — packaged-build release gate.
+- `docs/tangoq-playback-behavior.md` — current playback behavior contracts.
+- `docs/tangoq-config-migration-plan.md` — implemented configuration-migration
+  design and validation record.
 
 ## Debugging a crash
 

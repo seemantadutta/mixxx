@@ -32,9 +32,9 @@ page. Windows packages are named `tangoq-*.msi`; macOS packages are named
   visible.
 
 For the current release checks, see
-[docs/release-1.0.2-checklist.md](docs/release-1.0.2-checklist.md). The older
-[Tango Mode test catalog](tangomode_manual_test_cases.md) remains as a historical
-reference for deeper subsystem testing.
+[docs/release-1.0.2-checklist.md](docs/release-1.0.2-checklist.md). Current
+start-marker semantics are recorded in
+[docs/tangoq-playback-behavior.md](docs/tangoq-playback-behavior.md).
 
 ## Troubleshooting and diagnostic logs
 

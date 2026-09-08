@@ -101,7 +101,7 @@ digraph TangoQVersioningMigration {
 
         tango_db_exists [
             shape=diamond,
-            label="Does TangoQ's\nmixxxdb.sqlite exist?",
+            label="Does TangoQ's\ntangoq.db exist?",
             fillcolor="#f1f5f9",
         ];
         existing_tango_db [
@@ -111,7 +111,7 @@ digraph TangoQVersioningMigration {
         ];
         mixxx_db_found [
             shape=diamond,
-            label="Is mixxxdb.sqlite\nfound?",
+            label="Is stock Mixxx's\nmixxxdb.sqlite found?",
             fillcolor="#f1f5f9",
         ];
         import_choice [
