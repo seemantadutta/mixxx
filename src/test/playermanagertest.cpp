@@ -3,6 +3,7 @@
 #include <QTest>
 
 #include "control/controlindicatortimer.h"
+#include "control/controlobject.h"
 #include "database/mixxxdb.h"
 #include "effects/effectsmanager.h"
 #include "engine/channels/enginedeck.h"
@@ -161,6 +162,40 @@ TEST_F(PlayerManagerTest, UnEjectTest) {
     deck2->slotEjectTrack(2.0);
     ASSERT_NE(nullptr, deck2->getLoadedTrack());
     ASSERT_EQ(testId1, deck2->getLoadedTrack()->getId());
+}
+
+TEST_F(PlayerManagerTest, LiveModeBlocksEjectTest) {
+    // In LIVE mode an accidental eject must not pull a loaded (but paused) track
+    // out from under a running set. Eject is blocked while LIVE mode is on and
+    // works again once it is off. The [AutoDJ],live_mode control already exists
+    // here - Library creates the AutoDJ feature and its AutoDJProcessor, which
+    // owns it - so drive that control with the static ControlObject::set(). Do
+    // NOT construct another ControlObject for the same key: that is a
+    // duplicate-creation debug assert (see the class comment above) and yields a
+    // dummy object whose set() is a silent no-op.
+    const ConfigKey liveKey(QStringLiteral("[AutoDJ]"), QStringLiteral("live_mode"));
+    ASSERT_TRUE(ControlObject::exists(liveKey));
+
+    auto deck1 = m_pPlayerManager->getDeck(0);
+    TrackPointer pTrack = getOrAddTrackByLocation(getTestDir().filePath(kTrackLocationTest1));
+    ASSERT_NE(nullptr, pTrack);
+    deck1->slotLoadTrack(pTrack, false);
+    ASSERT_NE(nullptr, deck1->getLoadedTrack());
+    m_pEngine->process(1024);
+    waitForTrackToBeLoaded(deck1);
+    // sleep past the 'unreplace' double-click window so each eject is a single
+    QTest::qSleep(kUnreplaceDelay); // millis
+
+    // LIVE mode on: eject is a no-op, the paused track stays loaded.
+    ControlObject::set(liveKey, 1.0);
+    deck1->slotEjectTrack(1.0);
+    ASSERT_NE(nullptr, deck1->getLoadedTrack());
+
+    // LIVE mode off: eject works again.
+    QTest::qSleep(kUnreplaceDelay); // millis
+    ControlObject::set(liveKey, 0.0);
+    deck1->slotEjectTrack(1.0);
+    ASSERT_EQ(nullptr, deck1->getLoadedTrack());
 }
 
 // Loading a new track in a deck causes the old one to be ejected.
