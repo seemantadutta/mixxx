@@ -1,8 +1,10 @@
 # TangoQ 1.0.2
 
-TangoQ 1.0.2 is the first official TangoQ release. It is purpose-built for
-Argentine tango DJing and is based on Mixxx 2.5.6. The earlier 1.0.1 builds were
-limited early-access builds.
+TangoQ 1.0.2 is Early Access Candidate 2 for the dedicated Argentine tango DJ
+application based on Mixxx 2.5.6. It begins a wider early-access soft start: if
+that rollout reveals no release-blocking issues, this same version will become
+TangoQ's first general public release. TangoQ 1.0.1 was Early Access Candidate
+1.
 
 > **Upgrading from early-access TangoQ 1.0.1:** On Windows, uninstall TangoQ
 > 1.0.1 before installing 1.0.2. On macOS, quit TangoQ and replace the existing
@@ -81,7 +83,6 @@ limited early-access builds.
 - Cortina tags, performance labels, pause markers, and LIVE mode are session
   annotations and are cleared when TangoQ restarts. The underlying queue and
   library database persist normally.
-- External-display and OBS export is not included in this release.
 
 Before publishing, complete the packaged-build checks in
 [docs/release-1.0.2-checklist.md](docs/release-1.0.2-checklist.md).

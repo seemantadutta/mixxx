@@ -18,16 +18,14 @@ behavior separated even though users no longer switch between those modes.
 
 ## Completed
 
-### Tango mode & queue
+### Tango workflow & queue
 
-- **Tango mode is permanent.** TangoQ is a tango-only build: Tango mode is locked
-  on at startup and its UI switch (the preferences checkbox and keyboard shortcut)
-  has been removed. The gating code is retained, so the change is cleanly
-  revertible. Earlier the mode was a toggle (keyboard shortcut + preferences)
-  honouring the "only while Auto DJ is stopped" rule; that has been superseded.
+- **The tango workflow is permanent.** TangoQ is a tango-only build. The former
+  mode switch and keyboard shortcut have been removed; retained internal gating
+  keeps fork-specific behavior isolated from inherited Mixxx code.
 - **Cursor-based Auto DJ queue.** The queue plays in order, keeps played tracks,
   and stops at the end. Shuffle, skip, random, re-queue and list re-sorting are
-  locked while in Tango mode.
+  locked in TangoQ.
 - **Queue protection across every entry point.** "Add to Auto DJ (top)" and
   "(replace)" are blocked not only in the track menu but also for the
   double-click action, the controller controls, and the playlist / external-library
@@ -80,8 +78,8 @@ behavior separated even though users no longer switch between those modes.
 - **HUD hidden while Auto DJ is stopped.** With no set running there is no countdown
   to show, so the HUD paints nothing rather than sitting at `--:--`.
 - **Cortina tagging in the deck area**, not just in the Auto DJ list.
-- **Dancer icon** shows a red couple only in Tango mode and disappears entirely in
-  stock mode, so plain Mixxx never shows the Tango marker.
+- **Dancer icon** identifies the dedicated tango workflow in TangoQ without
+  changing the corresponding inherited Mixxx skin behavior.
 - **High Contrast daylight scheme.** TangoQ's simplified skin includes a
   Sunrise-derived khaki/sand palette for bright rooms, with attribution to
   Dj.Anth0n1's LateNight Sunrise Color Scheme.
@@ -96,7 +94,7 @@ behavior separated even though users no longer switch between those modes.
 
 ### Stability
 
-- **Fixed a crash on quit in Tango mode with tracks on the decks.** `PlayerManager`
+- **Fixed a crash on quit with TangoQ tracks on the decks.** `PlayerManager`
   was destroyed before the `Library` that owns `AutoDJProcessor`; a deck destructor
   emitted `PlayerInfo::trackChanged` from `unloadTrack()`, which was answered inline
   by walking every deck — reading one that had already been freed. (The symptom was
@@ -149,13 +147,6 @@ what actually plays.
 - Remove the disabled "Add to Auto DJ (bottom / replace)" entries entirely rather
   than greying them out.
 - Rename "Set DJ Start" / "Set DJ Start here" to **"Set Start"** / **"Set Start here"**.
-
-### Now-playing / external display
-
-Export the currently playing track to external display software (OBS or any screen
-tool). Leans on the existing now-playing tracking; the main decision is mechanism —
-a now-playing text/JSON file that other software reads is simpler and more flexible
-than a built-in second window.
 
 ### macOS packaging follow-ups (require a Mac)
 
@@ -251,11 +242,6 @@ default for a DJ. If built, they should be opt-in via a Preferences checkbox to
 
 ---
 
-## Long-term / research
+## Long-term
 
 - Detect tracks with large gaps or audio dropouts.
-- **Tanda suggestion engine.** Needs a well-tagged library and more design work. One
-  path: tag tracks as popular/unpopular during live gigs, build a dataset over
-  months to years, then use it to suggest tandas based on expected dancer outcomes.
-  (Framing and the finding that the underlying data does not yet exist live in the
-  untracked `tanda-insights.md`.)

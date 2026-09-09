@@ -1,10 +1,9 @@
 # TangoQ 1.0.2 release checklist
 
-This is the release gate for the first official TangoQ build. Run it against the
-packaged Windows and macOS installers, not only an in-tree development build.
-The comprehensive historical Tango Mode catalog remains available in
-[`../tangomode_manual_test_cases.md`](../tangomode_manual_test_cases.md) when a
-change needs deeper subsystem coverage.
+This is the release gate for the TangoQ 1.0.2 early-access soft start and for
+promoting the same build to TangoQ's first general public release. Run it
+against the packaged Windows and macOS installers, not only an in-tree
+development build.
 
 Record the tested commit, platform, artifact filename, and result for each run.
 A failure in a **release blocker** must be fixed or explicitly accepted before
@@ -98,16 +97,29 @@ pause-after-track marker. Use short audio files or start near their ends.
 - [ ] On macOS, Finder, Dock, About, microphone permission text, and the mounted
       DMG identify TangoQ.
 
-## 6. Publish
+## 6. Early-access publish
 
 - [ ] Merge the release-preparation PR and tag the exact release commit as
       `1.0.2` (without a `v`; that is the tag pattern used by the workflow).
 - [ ] Confirm the tag workflow succeeds and download its packaged artifacts.
 - [ ] Calculate SHA-256 hashes for every published MSI/DMG and include them on
       the GitHub release page.
-- [ ] Create the GitHub release for tag `1.0.2`, paste the release notes, attach
+- [ ] Create a GitHub prerelease for tag `1.0.2`, paste the release notes, attach
       the three installers, and verify each attachment downloads successfully.
+- [ ] Add the prerelease download to the TangoQ website as the early-access
+      soft start. Use permanent GitHub release-asset URLs, not Actions artifact
+      URLs.
 - [ ] Install one downloaded release attachment and confirm its About dialog says
       `1.0.2`; this catches uploading an artifact from the wrong workflow.
 - [ ] Keep a copy of the final artifact names, hashes, and tested commit in the
       release record.
+- [ ] Record early-access reports and treat playback, queue, settings, database,
+      or installation regressions as release blockers.
+
+## 7. General-public promotion
+
+- [ ] Confirm that the early-access period found no unresolved release blocker.
+- [ ] Clear the prerelease flag on the existing `1.0.2` GitHub release; do not
+      rebuild or silently replace the tested artifacts.
+- [ ] Update the TangoQ website to present 1.0.2 as the public release and retain
+      the published checksums.

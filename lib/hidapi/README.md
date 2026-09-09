@@ -160,7 +160,8 @@ int main(int argc, char* argv[])
 }
 ```
 
-You can also use [hidtest/test.c](hidtest/test.c)
+You can also use
+[hidtest/test.c from the vendored 0.11.2 release](https://github.com/libusb/hidapi/blob/hidapi-0.11.2/hidtest/test.c)
 as a starting point for your applications.
 
 
@@ -186,4 +187,6 @@ Check the documentation/package list of your package manager.
 
 ## Build from Source
 
-Check [BUILD.md](BUILD.md) for details.
+Check the
+[0.11.2 build instructions](https://github.com/libusb/hidapi/blob/hidapi-0.11.2/BUILD.md)
+for details. This repository vendors only the HIDAPI files needed by TangoQ.

@@ -1,9 +1,8 @@
-# TangoQ configuration migration plan
+# TangoQ configuration migration design
 
 Status: implemented for TangoQ 1.0.2
 
-Target: the first TangoQ release that ships this work, currently planned as
-1.0.2
+Release: included in the TangoQ 1.0.2 baseline
 
 Related visualization:
 [`tangoq-versioning-migration-flow.dot`](tangoq-versioning-migration-flow.dot)
@@ -15,14 +14,14 @@ history. This prevents TangoQ upgrades from interpreting a product version such
 as `1.0.1` as an ancient Mixxx version and rerunning the Mixxx 2.4 waveform
 migration.
 
-The current bug changes two user settings during each TangoQ product upgrade:
+The original bug changed two user settings during each TangoQ product upgrade:
 
 - `[Waveform] WaveformType` is passed through the old all-shader conversion.
 - `[Waveform] FrameRate` is set to `60`.
 
-This work must preserve an existing DJ's settings, introduce a clean foundation
-for future TangoQ configuration migrations, and remain independent of library
-database migration.
+The implementation preserves an existing DJ's settings, provides a clean
+foundation for future TangoQ configuration migrations, and remains independent
+of library database migration.
 
 ## Decisions
 
@@ -75,13 +74,13 @@ compared with a Mixxx migration threshold.
 Running the same release again must be idempotent: no first-run defaults, legacy
 migrations, or setting changes may be applied on the second launch.
 
-## Proposed control flow
+## Implemented control flow
 
 Define the current TangoQ configuration schema as a named integer constant in
 the preferences upgrade implementation. Keep the key name and current value in
 one place so future migrations cannot drift apart.
 
-`Upgrade::versionUpgrade()` should follow this order:
+`Upgrade::versionUpgrade()` follows this order:
 
 1. Open `tangoq.cfg` directly from the supplied TangoQ settings path. Do not
    inspect, copy, move, or remove legacy Mixxx configuration files.
@@ -183,9 +182,10 @@ QT_QPA_PLATFORM=offscreen ./build/mixxx-test \
     '--gtest_filter=UpgradeTest.*'
 ```
 
-Then run formatting and repository checks for the branch diff. Do not launch the
-application automatically. If a manual release check is desired, the user can
-install and launch TangoQ, then verify a backed-up copy of a customized config:
+The implementation was validated with formatting and repository checks. Do not
+launch the application automatically. If a manual release check is desired, the
+user can install and launch TangoQ, then verify a backed-up copy of a customized
+config:
 
 - the customized waveform type and frame rate remain unchanged;
 - `[Config] Version` is the current product version;
