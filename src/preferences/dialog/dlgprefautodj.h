@@ -18,6 +18,11 @@ class DlgPrefAutoDJ : public DlgPreferencePage, public Ui::DlgPrefAutoDJDlg {
   public:
     DlgPrefAutoDJ(QWidget* pParent, UserSettingsPointer pConfig);
 
+    // Blocks OK/Apply while the cortina fade budget is invalid (fade-in +
+    // fade-out exceed the cortina length in Cortina Fade mode). DlgPreferences
+    // then keeps the dialog open and switches back to this page.
+    bool okayToClose() const override;
+
   public slots:
     void slotUpdate() override;
     void slotApply() override;
@@ -53,6 +58,13 @@ class DlgPrefAutoDJ : public DlgPreferencePage, public Ui::DlgPrefAutoDJDlg {
     // Enables/disables the cortina fade-in/out inputs depending on whether
     // the Cortina Fade transition mode is selected.
     void updateCortinaFadeEnabled();
+    // Locks the cortina length, transition mode and fade inputs while Auto DJ
+    // is running, and unlocks them when it stops. Kept in its own method so it
+    // can be re-run live when [AutoDJ],enabled changes, not only on dialog show.
+    void updateCortinaControlsEnabled();
+    // True unless Cortina Fade mode is selected and fade-in + fade-out exceed
+    // the cortina length. Reads the currently shown (buffered) spinbox values.
+    bool cortinaFadeBudgetValid() const;
     void setupTandaColorEditors();
     void loadTandaColors();
     void updateTandaColorEditorsEnabled();
@@ -66,6 +78,9 @@ class DlgPrefAutoDJ : public DlgPreferencePage, public Ui::DlgPrefAutoDJDlg {
     // reflects cockpit nudges made while Auto DJ is running, even though it stays
     // greyed out then.
     ControlProxy* m_pCortinaLengthControl;
+    // Observes [AutoDJ],enabled so the cortina timing controls lock/unlock live
+    // when a set starts or stops while the preferences dialog is already open.
+    ControlProxy* m_pAutoDJEnabledControl;
     TandaColorPalette* const m_pTandaColorPalette;
     bool m_tandaColorCodingEnabled{true};
     QCheckBox* m_pUseTandaColorCodingCheckBox{nullptr};

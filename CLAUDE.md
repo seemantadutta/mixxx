@@ -15,6 +15,8 @@ current flow in code rather than assuming.
 
 ## Hard rules
 
+**Omit co-authored by and claude session lines in all commit texts.**
+
 **Use clear language, avoid run on sentences.**
 
 **Never launch `tangoq.exe`.** The user launches it. It has no
@@ -36,6 +38,8 @@ to close it; once it relinks, *tell them it is ready* rather than starting it.
 `mixxx_SOURCE_DIR` is baked into `build/CMakeCache.txt`. Skin XML, QSS and SVG
 edits need an **app restart, not a rebuild** — say so instead of asking for a
 build. (`build/res` holds only shaders.)
+
+
 
 ## Build and test
 
@@ -70,7 +74,7 @@ cmake --build . --config RelWithDebInfo -- -j 2      # the app
   release tag, and the fork's **default and protected** branch. It is not an
   upstream mirror.
 - Feature work goes on topic branches → PR into `main` → delete the topic
-  branch. **The user opens and merges PRs**; provide the commit/PR text only.
+  branch. Use gh to manage PRs, Issues and CI runs only when asked explicitly
 - **`tangomode`** is the retired former trunk, frozen and locked read-only at
   the commit `main` was branched from. Never target it.
 - `master` and all upstream release/topic branches and tags are **mirrors of
