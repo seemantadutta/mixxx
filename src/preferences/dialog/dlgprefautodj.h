@@ -18,6 +18,11 @@ class DlgPrefAutoDJ : public DlgPreferencePage, public Ui::DlgPrefAutoDJDlg {
   public:
     DlgPrefAutoDJ(QWidget* pParent, UserSettingsPointer pConfig);
 
+    // Blocks OK/Apply while the cortina fade budget is invalid (fade-in +
+    // fade-out exceed the cortina length in Cortina Fade mode). DlgPreferences
+    // then keeps the dialog open and switches back to this page.
+    bool okayToClose() const override;
+
   public slots:
     void slotUpdate() override;
     void slotApply() override;
@@ -53,6 +58,9 @@ class DlgPrefAutoDJ : public DlgPreferencePage, public Ui::DlgPrefAutoDJDlg {
     // Enables/disables the cortina fade-in/out inputs depending on whether
     // the Cortina Fade transition mode is selected.
     void updateCortinaFadeEnabled();
+    // True unless Cortina Fade mode is selected and fade-in + fade-out exceed
+    // the cortina length. Reads the currently shown (buffered) spinbox values.
+    bool cortinaFadeBudgetValid() const;
     void setupTandaColorEditors();
     void loadTandaColors();
     void updateTandaColorEditorsEnabled();

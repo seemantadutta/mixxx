@@ -250,8 +250,8 @@ DlgPreferences::DlgPreferences(
     labelWarning->hide();
     labelWarningIcon->hide();
     labelWarning->setText(tr(
-            "<font color='#BB0000'><b>Some preferences pages have errors. "
-            "To apply the changes please first fix the issues.</b></font>"));
+            "<font color='#BB0000'><b>Some values are invalid, please re-enter "
+            "valid values.</b></font>"));
     QIcon icon = style()->standardIcon(QStyle::SP_MessageBoxWarning);
     labelWarningIcon->setPixmap(icon.pixmap(16));
 
@@ -405,6 +405,11 @@ void DlgPreferences::onShow() {
 
     // Notify children that we are about to show.
     emit showDlg();
+
+    // Start each showing with the validation banner cleared; an invalid
+    // OK / Apply attempt re-shows it.
+    labelWarning->hide();
+    labelWarningIcon->hide();
 }
 
 void DlgPreferences::slotButtonPressed(QAbstractButton* pButton) {
@@ -416,6 +421,10 @@ void DlgPreferences::slotButtonPressed(QAbstractButton* pButton) {
         if (pCurrentPage) {
             pCurrentPage->slotResetToDefaults();
         }
+        // Defaults are valid, so clear any stale "invalid values" banner left
+        // over from an earlier failed OK / Apply.
+        labelWarning->hide();
+        labelWarningIcon->hide();
         break;
     case QDialogButtonBox::ApplyRole:
         emit applyPreferences();
@@ -455,9 +464,15 @@ bool DlgPreferences::pendingConfigValidOnAllPages() {
             // Fixes https://github.com/mixxxdj/mixxx/issues/6077
             // and may help with other pages in the future.
             contentsTreeWidget->setCurrentItem(page.pTreeItem);
+            // OK / Apply stay clickable but do nothing while a page is invalid;
+            // show the otherwise-hidden banner so the user knows why.
+            labelWarning->show();
+            labelWarningIcon->show();
             return false;
         }
     }
+    labelWarning->hide();
+    labelWarningIcon->hide();
     return true;
 }
 

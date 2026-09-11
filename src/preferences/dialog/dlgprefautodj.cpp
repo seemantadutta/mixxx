@@ -404,6 +404,24 @@ void DlgPrefAutoDJ::updateCortinaFadeEnabled() {
     CortinaHoldLabel->setEnabled(enabled);
 }
 
+bool DlgPrefAutoDJ::cortinaFadeBudgetValid() const {
+    // Only the Cortina Fade transition uses the fade-in/out times, so a hard-cut
+    // cortina is never blocked by them.
+    if (CortinaFadeModeComboBox->currentIndex() != 1) {
+        return true;
+    }
+    return CortinaFadeInSpinBox->value() + CortinaFadeOutSpinBox->value() <=
+            CortinaLengthSpinBox->value();
+}
+
+bool DlgPrefAutoDJ::okayToClose() const {
+    // Refuse OK/Apply while fade-in + fade-out exceed the cortina length. The
+    // engine would scale the fades to fit, but blocking here forces the user to
+    // pick values they can actually see, and the "Cortina hold time" warning
+    // label already explains why.
+    return cortinaFadeBudgetValid();
+}
+
 void DlgPrefAutoDJ::slotUpdate() {
     loadTandaColors();
     const bool autoDJRunning =
