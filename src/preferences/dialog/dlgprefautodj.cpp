@@ -44,6 +44,7 @@ DlgPrefAutoDJ::DlgPrefAutoDJ(QWidget* pParent,
         : DlgPreferencePage(pParent),
           m_pConfig(pConfig),
           m_pCortinaLengthControl(nullptr),
+          m_pAutoDJEnabledControl(nullptr),
           m_pTandaColorPalette(TandaColorPalette::shared(pConfig)) {
     setupUi(this);
 
@@ -146,6 +147,14 @@ DlgPrefAutoDJ::DlgPrefAutoDJ(QWidget* pParent,
         if (CortinaLengthSpinBox->value() != seconds) {
             CortinaLengthSpinBox->setValue(seconds);
         }
+    });
+    // Lock the cortina timing controls the moment a set starts and unlock them
+    // when it stops, even if the preferences dialog was already open. Without
+    // this, the stop-only gating was applied only on dialog show.
+    m_pAutoDJEnabledControl = new ControlProxy(
+            ConfigKey("[AutoDJ]", "enabled"), this);
+    m_pAutoDJEnabledControl->connectValueChanged(this, [this](double) {
+        updateCortinaControlsEnabled();
     });
 
     // Cortina transition mode: 0 = hard cut (current; cortina starts at full and
@@ -422,8 +431,7 @@ bool DlgPrefAutoDJ::okayToClose() const {
     return cortinaFadeBudgetValid();
 }
 
-void DlgPrefAutoDJ::slotUpdate() {
-    loadTandaColors();
+void DlgPrefAutoDJ::updateCortinaControlsEnabled() {
     const bool autoDJRunning =
             ControlObject::get(ConfigKey("[AutoDJ]", "enabled")) > 0.0;
     // The cortina length feeds the set-length estimate, which is only recomputed
@@ -433,6 +441,11 @@ void DlgPrefAutoDJ::slotUpdate() {
     // is only safe to alter while Auto DJ is stopped.
     CortinaFadeModeComboBox->setEnabled(!autoDJRunning);
     updateCortinaFadeEnabled();
+}
+
+void DlgPrefAutoDJ::slotUpdate() {
+    loadTandaColors();
+    updateCortinaControlsEnabled();
 }
 
 void DlgPrefAutoDJ::slotApply() {
